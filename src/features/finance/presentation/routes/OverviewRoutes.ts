@@ -16,7 +16,48 @@ const OverviewRoutes = async (app: FastifyInstance) => {
 
   app.get(
     "/overview",
-    { preHandler: [authValidation] },
+    {
+      preHandler: [authValidation],
+      schema: {
+        tags: ["Finance"],
+        summary: "Obtener resumen financiero del usuario",
+        security: [{ bearerAuth: [] }],
+        response: {
+          200: {
+            description: "Resumen actualizado",
+            type: "object",
+            required: [
+              "id",
+              "user_id",
+              "current_balance",
+              "income_balance",
+              "expenses_balance",
+            ],
+            properties: {
+              id: { type: "string", format: "uuid" },
+              user_id: { type: "string", format: "uuid" },
+              current_balance: { type: "string" },
+              income_balance: { type: "string" },
+              expenses_balance: { type: "string" },
+            },
+          },
+          401: {
+            description: "Sin autorizacion",
+            type: "object",
+            properties: {
+              error: { type: "string" },
+            },
+          },
+          500: {
+            description: "Error interno",
+            type: "object",
+            properties: {
+              error: { type: "string" },
+            },
+          },
+        },
+      },
+    },
     async (req: FastifyRequest, reply: FastifyReply) => {
       return overViewController.getOverview(req, reply);
     }

@@ -4,9 +4,9 @@ import { GetOverviewUseCase } from "../../application/useCases/overview/GetOverv
 export class OverviewController {
   constructor(private getOverviewUseCase: GetOverviewUseCase) {}
 
-  async getOverview(request: FastifyRequest, reply: FastifyReply) {
+  async getOverview(req: FastifyRequest, reply: FastifyReply) {
     try {
-      const userEmail = (request as any).user?.email;
+      const userEmail = (req as any).user?.email;
       const overview = await this.getOverviewUseCase.execute(userEmail);
       reply.send(overview);
     } catch (error) {
