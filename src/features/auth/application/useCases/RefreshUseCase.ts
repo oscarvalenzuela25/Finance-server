@@ -3,7 +3,7 @@ import { CustomError } from "../../../../utils/CustomErrors";
 import { validate } from "../../../../utils/schemaValidator";
 import { AuthRepository } from "../../infrastructure/repository/AuthRepository";
 import { refreshTokenSchema } from "../../presentation/validators/AuthValidators";
-import { issuePair } from "../../utils/AuthUtils";
+import { issuePair } from "../../utils/authUtils";
 
 export class RefreshUseCase {
   constructor(private authRepository: AuthRepository) {}

@@ -23,4 +23,17 @@ export class FinanceRepository {
       where: { user_id: userId },
     });
   }
+
+  async getBudgetsByUserId(userId: string) {
+    return prisma.budget.findMany({
+      where: { user_id: userId },
+      include: {
+        category: {
+          include: {
+            transactions: true,
+          },
+        },
+      },
+    });
+  }
 }

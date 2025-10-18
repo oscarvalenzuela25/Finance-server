@@ -1,7 +1,7 @@
 import { RegisterDTO } from "../../domain/DTO/RegisterDTO";
 import { AuthRepository } from "../../infrastructure/repository/AuthRepository";
 import bcrypt from "bcrypt";
-import { issuePair, publicUser } from "../../utils/AuthUtils";
+import { issuePair, publicUser } from "../../utils/authUtils";
 import { validate } from "../../../../utils/schemaValidator";
 import { registerSchema } from "../../presentation/validators/AuthValidators";
 import { CustomError } from "../../../../utils/CustomErrors";
