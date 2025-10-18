@@ -7,6 +7,7 @@ CREATE TABLE "public"."category" (
 
 CREATE TABLE "public"."transaction" (
   "id" uuid NOT NULL,
+  "user_id" uuid NOT NULL,
   "category_id" uuid NOT NULL,
   "name" text NOT NULL,
   "transaction_date" timestamp with time zone NOT NULL,
@@ -16,7 +17,7 @@ CREATE TABLE "public"."transaction" (
 
 CREATE TABLE "public"."budget" (
   "id" uuid NOT NULL,
-  "user_id" uuid,
+  "user_id" uuid NOT NULL,
   "category_id" uuid NOT NULL,
   "maximum" numeric NOT NULL DEFAULT 0,
   "theme" text NOT NULL,
@@ -44,6 +45,7 @@ CREATE TABLE "public"."pot" (
 
 -- Índices útiles (opcionales pero recomendados)
 CREATE INDEX "idx_transaction_category_id" ON "public"."transaction" ("category_id");
+CREATE INDEX "idx_transaction_user_id" ON "public"."transaction" ("user_id");
 CREATE INDEX "idx_transaction_date" ON "public"."transaction" ("transaction_date");
 CREATE INDEX "idx_budget_user_id" ON "public"."budget" ("user_id");
 CREATE INDEX "idx_budget_category_id" ON "public"."budget" ("category_id");
@@ -54,6 +56,10 @@ CREATE INDEX "idx_pot_user_id" ON "public"."pot" ("user_id");
 ALTER TABLE "public"."transaction"
   ADD CONSTRAINT "fk_transaction_category"
   FOREIGN KEY ("category_id") REFERENCES "public"."category"("id");
+
+  ALTER TABLE "public"."transaction"
+  ADD CONSTRAINT "fk_transaction_user"
+  FOREIGN KEY ("user_id") REFERENCES "public"."user"("id");
 
 ALTER TABLE "public"."budget"
   ADD CONSTRAINT "fk_budget_category"

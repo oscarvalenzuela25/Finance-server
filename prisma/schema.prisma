@@ -9,21 +9,22 @@ datasource db {
 
 // Tabla: public.user
 model user {
-  id    String @id @default(uuid())
-  name  String
-  email String @unique
+  id       String   @id @default(uuid()) @db.Uuid
+  name     String
+  email    String   @unique
   password String
 
   budgets   budget[]
   overviews overview[]
   pots      pot[]
+  transactions transaction[]
 
   @@map("user")
 }
 
 // Tabla: public.category
 model category {
-  id   String @id @default(uuid())
+  id   String @id @default(uuid()) @db.Uuid
   key  String
 
   transactions transaction[]
@@ -34,60 +35,63 @@ model category {
 
 // Tabla: public.transaction
 model transaction {
-  id              String   @id @default(uuid())
-  category_id     String
-  name            String
-  transaction_date DateTime
-  amount          Decimal  @db.Decimal(18, 2)
+  id               String   @id @default(uuid()) @db.Uuid
+  user_id          String   @db.Uuid
+  category_id      String   @db.Uuid
+  name             String
+  transaction_date DateTime @db.Timestamptz
+  amount           Decimal  @db.Decimal
 
+  user     user     @relation(fields: [user_id], references: [id])
   category category @relation(fields: [category_id], references: [id])
 
   @@map("transaction")
-  @@index([category_id])
-  @@index([transaction_date])
+  @@index([user_id], map: "idx_transaction_user_id")
+  @@index([category_id], map: "idx_transaction_category_id")
+  @@index([transaction_date], map: "idx_transaction_date")
 }
 
 // Tabla: public.overview
 model overview {
-  id               String  @id @default(uuid())
-  user_id          String
-  current_balance  Decimal @db.Decimal(18, 2)
-  income_balance   Decimal @db.Decimal(18, 2)
-  expenses_balance Decimal @db.Decimal(18, 2)
+  id               String  @id @default(uuid()) @db.Uuid
+  user_id          String  @db.Uuid
+  current_balance  Decimal @db.Decimal
+  income_balance   Decimal @db.Decimal
+  expenses_balance Decimal @db.Decimal
 
   user user @relation(fields: [user_id], references: [id])
 
   @@map("overview")
-  @@index([user_id])
+  @@index([user_id], map: "idx_overview_user_id")
 }
 
 // Tabla: public.pot
 model pot {
-  id            String  @id @default(uuid())
-  user_id       String
+  id            String  @id @default(uuid()) @db.Uuid
+  user_id       String  @db.Uuid
   name          String
-  target_value  Decimal @db.Decimal(18, 2)
-  current_value Decimal @db.Decimal(18, 2)
+  target_value  Decimal @db.Decimal
+  current_value Decimal @db.Decimal
   theme         String?
 
   user user @relation(fields: [user_id], references: [id])
 
   @@map("pot")
-  @@index([user_id])
+  @@index([user_id], map: "idx_pot_user_id")
 }
 
 // Tabla: public.budget
 model budget {
-  id          String  @id @default(uuid())
-  user_id     String?
-  category_id String
-  maximum     Decimal @db.Decimal(18, 2) @default(0)
+  id          String  @id @default(uuid()) @db.Uuid
+  user_id     String  @db.Uuid
+  category_id String  @db.Uuid
+  maximum     Decimal @db.Decimal @default(0)
   theme       String
 
-  user     user?     @relation(fields: [user_id], references: [id])
-  category category  @relation(fields: [category_id], references: [id])
+  user     user     @relation(fields: [user_id], references: [id])
+  category category @relation(fields: [category_id], references: [id])
 
   @@map("budget")
-  @@index([user_id])
-  @@index([category_id])
+  @@index([user_id], map: "idx_budget_user_id")
+  @@index([category_id], map: "idx_budget_category_id")
 }
