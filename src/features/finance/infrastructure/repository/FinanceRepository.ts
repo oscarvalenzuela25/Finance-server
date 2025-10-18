@@ -36,4 +36,31 @@ export class FinanceRepository {
       },
     });
   }
+
+  async getTransactionsByUserId(
+    userId: string,
+    includes: { category?: boolean } = {},
+    options: { page?: number; limit?: number } = {}
+  ) {
+    const { page = 1, limit = 10 } = options;
+    let optionsParams = {};
+    if (page && limit) {
+      optionsParams = {
+        skip: (page - 1) * limit,
+        take: limit,
+      };
+    }
+    if (includes.category) {
+      optionsParams = {
+        ...optionsParams,
+        include: {
+          category: true,
+        },
+      };
+    }
+    return prisma.transaction.findMany({
+      where: { user_id: userId },
+      ...optionsParams,
+    });
+  }
 }
