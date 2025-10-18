@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Tabla: public.user
+model user {
+  id    String @id @default(uuid())
+  name  String
+  email String @unique
+  password String
+
+  budgets   budget[]
+  overviews overview[]
+  pots      pot[]
+
+  @@map("user")
+}
+
+// Tabla: public.category
+model category {
+  id   String @id @default(uuid())
+  key  String
+
+  transactions transaction[]
+  budgets      budget[]
+
+  @@map("category")
+}
+
+// Tabla: public.transaction
+model transaction {
+  id              String   @id @default(uuid())
+  category_id     String
+  name            String
+  transaction_date DateTime
+  amount          Decimal  @db.Decimal(18, 2)
+
+  category category @relation(fields: [category_id], references: [id])
+
+  @@map("transaction")
+  @@index([category_id])
+  @@index([transaction_date])
+}
+
+// Tabla: public.overview
+model overview {
+  id               String  @id @default(uuid())
+  user_id          String
+  current_balance  Decimal @db.Decimal(18, 2)
+  income_balance   Decimal @db.Decimal(18, 2)
+  expenses_balance Decimal @db.Decimal(18, 2)
+
+  user user @relation(fields: [user_id], references: [id])
+
+  @@map("overview")
+  @@index([user_id])
+}
+
+// Tabla: public.pot
+model pot {
+  id            String  @id @default(uuid())
+  user_id       String
+  name          String
+  target_value  Decimal @db.Decimal(18, 2)
+  current_value Decimal @db.Decimal(18, 2)
+  theme         String?
+
+  user user @relation(fields: [user_id], references: [id])
+
+  @@map("pot")
+  @@index([user_id])
+}
+
+// Tabla: public.budget
+model budget {
+  id          String  @id @default(uuid())
+  user_id     String?
+  category_id String
+  maximum     Decimal @db.Decimal(18, 2) @default(0)
+  theme       String
+
+  user     user?     @relation(fields: [user_id], references: [id])
+  category category  @relation(fields: [category_id], references: [id])
+
+  @@map("budget")
+  @@index([user_id])
+  @@index([category_id])
+}
