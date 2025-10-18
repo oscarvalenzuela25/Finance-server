@@ -1,8 +1,8 @@
 import fastify from "fastify";
 import cors from "@fastify/cors";
 import envs from "./envs";
-import AuthRoutes from "../features/auth/presentation/routes/AuthRoutes";
-import FinanceRoutes from "../features/finance/presentation/routes/FinanceRoutes";
+import AuthRoutes from "../features/auth/presentation/routes";
+import FinanceRoutes from "../features/finance/presentation/routes";
 
 const server = async () => {
   const server = fastify({ logger: true });

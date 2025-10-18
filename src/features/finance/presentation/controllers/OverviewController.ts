@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { GetOverviewUseCase } from "../../../application/useCases/overview/GetOverviewUseCase";
+import { GetOverviewUseCase } from "../../application/useCases/overview/GetOverviewUseCase";
 
 export class OverviewController {
   constructor(private getOverviewUseCase: GetOverviewUseCase) {}

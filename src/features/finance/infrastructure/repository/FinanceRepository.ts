@@ -17,4 +17,10 @@ export class FinanceRepository {
       data: payload,
     });
   }
+
+  async getPotsByUserId(userId: string) {
+    return prisma.pot.findMany({
+      where: { user_id: userId },
+    });
+  }
 }
