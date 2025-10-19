@@ -1,4 +1,5 @@
 import { prisma } from "../../../../lib/prisma";
+import { CreateOverview, GetTransactionsQueryParams } from "../../domain/types";
 
 export class FinanceRepository {
   async getOverviewByUserId(userId: string) {
@@ -7,12 +8,7 @@ export class FinanceRepository {
     });
   }
 
-  async createOverview(payload: {
-    user_id: string;
-    current_balance: number;
-    income_balance: number;
-    expenses_balance: number;
-  }) {
+  async createOverview(payload: CreateOverview) {
     return prisma.overview.create({
       data: payload,
     });
@@ -37,22 +33,26 @@ export class FinanceRepository {
     });
   }
 
-  async getTransactionsByUserId(
-    userId: string,
-    includes: { category?: boolean } = {},
-    options: { page?: number; limit?: number } = {}
-  ) {
-    const { page = 1, limit = 10 } = options;
-    let optionsParams = {};
+  async getTransactionsByUserId({
+    userId,
+    includes,
+    queryParams,
+  }: {
+    userId: string;
+    includes: { category?: boolean };
+    queryParams: GetTransactionsQueryParams;
+  }) {
+    const { page, limit } = queryParams;
+    let getQueryParams = {};
     if (page && limit) {
-      optionsParams = {
+      getQueryParams = {
         skip: (page - 1) * limit,
         take: limit,
       };
     }
     if (includes.category) {
-      optionsParams = {
-        ...optionsParams,
+      getQueryParams = {
+        ...getQueryParams,
         include: {
           category: true,
         },
@@ -60,7 +60,7 @@ export class FinanceRepository {
     }
     return prisma.transaction.findMany({
       where: { user_id: userId },
-      ...optionsParams,
+      ...getQueryParams,
     });
   }
 }

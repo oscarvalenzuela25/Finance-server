@@ -1,17 +1,20 @@
+import { validate } from "../../../../../utils/schemaValidator";
 import { FinanceRepository } from "../../../infrastructure/repository/FinanceRepository";
+import { getTransactionsQueryParams } from "../../../presentation/validators/FinanceValidators";
 
 export class GetTransactionsByUserId {
   constructor(private financeRepository: FinanceRepository) {}
 
   async execute(
     userId: string,
-    options: { page?: number; limit?: number } = {}
+    queryParams: { page?: number; limit?: number } = {}
   ) {
-    const transactions = await this.financeRepository.getTransactionsByUserId(
+    validate(getTransactionsQueryParams, queryParams);
+    const transactions = await this.financeRepository.getTransactionsByUserId({
       userId,
-      { category: true },
-      options
-    );
+      includes: { category: true },
+      queryParams,
+    });
     return transactions;
   }
 }
