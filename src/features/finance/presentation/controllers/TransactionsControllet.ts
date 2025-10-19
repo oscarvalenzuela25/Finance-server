@@ -1,5 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { GetTransactionsByUserId } from "../../application/useCases/transactions/getTransactionsUseCase";
+import { GetTransactionsByUserId } from "../../application/useCases/transactions/GetTransactionsUseCase";
+import { GetTransactionsQueryParams } from "../../domain/types";
 
 export class TransactionsController {
   constructor(private getTransactionsByUserId: GetTransactionsByUserId) {}
@@ -7,8 +8,11 @@ export class TransactionsController {
   async getTransactions(req: FastifyRequest, reply: FastifyReply) {
     try {
       const userId = (req as any).user?.id;
-      const options = req.query as { page?: number; limit?: number };
-      const transactions = await this.getTransactionsByUserId.execute(userId, options);
+      const queryParams = req.query as GetTransactionsQueryParams;
+      const transactions = await this.getTransactionsByUserId.execute(
+        userId,
+        queryParams
+      );
       return reply.send(transactions);
     } catch (error) {
       return reply.status(500).send({ error: "Internal Server Error" });
