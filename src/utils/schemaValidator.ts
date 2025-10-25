@@ -5,7 +5,6 @@ export const validate = <T extends ZodSchema>(schema: T, data: unknown) => {
   const result = schema.safeParse(data);
   if (!result.success) {
     const e = result.error.flatten();
-    console.log(e);
     const err = CustomError.validation(
       JSON.stringify(e.fieldErrors)
     ) as Error & {
