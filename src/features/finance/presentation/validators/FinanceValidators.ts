@@ -15,3 +15,24 @@ export const getTransactionsQueryParams = z.object({
 export const getPotsQueryParams = z.object({
   limit: z.number().optional(),
 });
+
+export const createTransaction = z.object({
+  category_id: z.string(),
+  name: z.string(),
+  amount: z.number(),
+  transaction_date: z.string(),
+});
+
+export const updateTransactionRouteParams = z.object({
+  transactionId: z.string(),
+});
+
+export const updateTransaction = z.object({
+  category_id: z.string().optional(),
+  name: z.string().optional(),
+  amount: z.number().optional(),
+});
+
+export const deleteTransactionRouteParams = z.object({
+  transactionId: z.string(),
+});

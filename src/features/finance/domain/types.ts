@@ -5,16 +5,32 @@ export type CreateOverview = {
   expenses_balance: number;
 };
 
+export type GetPotsQueryParams = {
+  limit?: number;
+};
+
+// Transactions
 export type GetTransactionsQueryParams = {
   page?: number;
   limit?: number;
   q?: {
     search?: string;
-    sort?: "asc" | "desc";
+    sort_name?: "asc" | "desc";
+    sort_transaction_date?: "asc" | "desc";
+    sort_amount?: "asc" | "desc";
     category?: string;
   };
 };
 
-export type GetPotsQueryParams = {
-  limit?: number;
+export type Transaction = {
+  id: string;
+  user_id: string;
+  name: string;
+  amount: number;
+  transaction_date: Date;
+  category_id: string;
 };
+
+export type TransactionToCreate = Omit<Transaction, "id">;
+
+export type TransactionToUpdate = Partial<TransactionToCreate>;

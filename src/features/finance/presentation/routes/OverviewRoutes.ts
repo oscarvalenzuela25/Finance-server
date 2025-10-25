@@ -6,12 +6,8 @@ import { AuthRepository } from "../../../auth/infrastructure/repository/AuthRepo
 import { OverviewController } from "../controllers/OverviewController";
 
 const OverviewRoutes = async (app: FastifyInstance) => {
-  const authRepository = new AuthRepository();
   const financeRepository = new FinanceRepository();
-  const getOverviewUseCase = new GetOverviewUseCase(
-    authRepository,
-    financeRepository
-  );
+  const getOverviewUseCase = new GetOverviewUseCase(financeRepository);
   const overViewController = new OverviewController(getOverviewUseCase);
 
   app.get(

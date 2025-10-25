@@ -6,8 +6,8 @@ export class OverviewController {
 
   async getOverview(req: FastifyRequest, reply: FastifyReply) {
     try {
-      const userEmail = (req as any).user?.email;
-      const overview = await this.getOverviewUseCase.execute(userEmail);
+      const userId = (req as any).user?.id;
+      const overview = await this.getOverviewUseCase.execute(userId);
       reply.send(overview);
     } catch (error) {
       reply.status(500).send({ error: "Internal Server Error" });
