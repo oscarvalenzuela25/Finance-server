@@ -9,7 +9,7 @@ import {
   updateTransactionRouteParams,
 } from "../validators/FinanceValidators";
 import { CreateTransactionUseCase } from "../../application/useCases/transactions/CreateTransactionUseCase";
-import { CreateTransactionDTO } from "../../domain/DTO/createTransactionDTO";
+import { CreateTransactionDTO } from "../../domain/DTO/CreateTransactionDTO";
 import { UpdateTransactionUseCase } from "../../application/useCases/transactions/UpdateTransactionUseCase";
 import { UpdateTransactionDTO } from "../../domain/DTO/UpdateTransactionDTO";
 import { DeleteTransactionUseCase } from "../../application/useCases/transactions/DeleteTransactionUseCase";
@@ -74,7 +74,7 @@ export class TransactionsController {
       const transactionId = (req.params as any).id;
       validate(deleteTransactionRouteParams, { transactionId });
       await this.deleteTransactionUseCase.execute(transactionId);
-      return reply.status(204).send();
+      return reply.status(204);
     } catch (error) {
       return reply.status(500).send({ error: "Internal Server Error" });
     }

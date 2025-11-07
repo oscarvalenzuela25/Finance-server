@@ -1,97 +1,81 @@
+// generator & datasource
 generator client {
   provider = "prisma-client-js"
 }
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-// Tabla: public.user
-model user {
-  id       String   @id @default(uuid()) @db.Uuid
-  name     String
-  email    String   @unique
-  password String
+/* ----------------- MODELOS ----------------- */
 
-  budgets   budget[]
-  overviews overview[]
-  pots      pot[]
+model user {
+  id       String @id @default(uuid()) @db.Uuid
+  name     String @db.Text
+  email    String @db.Text
+  password String @db.Text
+
+  // relaciones
   transactions transaction[]
+  budgets      budget[]
+  pots         pot[]
 
   @@map("user")
 }
 
-// Tabla: public.category
 model category {
-  id   String @id @default(uuid()) @db.Uuid
-  key  String
+  id  String @id @default(uuid()) @db.Uuid
+  key String @db.Text
 
-  transactions transaction[]
+  // relaciones
   budgets      budget[]
+  transactions transaction[]
 
   @@map("category")
 }
 
-// Tabla: public.transaction
-model transaction {
-  id               String   @id @default(uuid()) @db.Uuid
-  user_id          String   @db.Uuid
-  category_id      String   @db.Uuid
-  name             String
-  transaction_date DateTime @db.Timestamptz
-  amount           Decimal  @db.Decimal
-
-  user     user     @relation(fields: [user_id], references: [id])
-  category category @relation(fields: [category_id], references: [id])
-
-  @@map("transaction")
-  @@index([user_id], map: "idx_transaction_user_id")
-  @@index([category_id], map: "idx_transaction_category_id")
-  @@index([transaction_date], map: "idx_transaction_date")
-}
-
-// Tabla: public.overview
-model overview {
-  id               String  @id @default(uuid()) @db.Uuid
-  user_id          String  @db.Uuid
-  current_balance  Decimal @db.Decimal
-  income_balance   Decimal @db.Decimal
-  expenses_balance Decimal @db.Decimal
-
-  user user @relation(fields: [user_id], references: [id])
-
-  @@map("overview")
-  @@index([user_id], map: "idx_overview_user_id")
-}
-
-// Tabla: public.pot
 model pot {
   id            String  @id @default(uuid()) @db.Uuid
   user_id       String  @db.Uuid
-  name          String
+  name          String  @db.Text
   target_value  Decimal @db.Decimal
   current_value Decimal @db.Decimal
-  theme         String?
+  theme         String  @db.Text
 
+  // relaciones
   user user @relation(fields: [user_id], references: [id])
 
   @@map("pot")
-  @@index([user_id], map: "idx_pot_user_id")
 }
 
-// Tabla: public.budget
 model budget {
   id          String  @id @default(uuid()) @db.Uuid
   user_id     String  @db.Uuid
   category_id String  @db.Uuid
-  maximum     Decimal @db.Decimal @default(0)
-  theme       String
+  maximum     Decimal @default(0) @db.Decimal
+  theme       String  @db.Text
 
-  user     user     @relation(fields: [user_id], references: [id])
-  category category @relation(fields: [category_id], references: [id])
+  // relaciones
+  user         user      @relation(fields: [user_id], references: [id])
+  category     category  @relation(fields: [category_id], references: [id])
+  transactions transaction[]
 
   @@map("budget")
-  @@index([user_id], map: "idx_budget_user_id")
-  @@index([category_id], map: "idx_budget_category_id")
+}
+
+model transaction {
+  id               String   @id @default(uuid()) @db.Uuid
+  user_id          String   @db.Uuid
+  category_id      String   @db.Uuid
+  budget_id        String?  @db.Uuid
+  name             String   @db.Text
+  transaction_date DateTime @db.Timestamptz
+  amount           Decimal  @db.Decimal
+
+  // relaciones
+  user     user     @relation(fields: [user_id], references: [id])
+  category category @relation(fields: [category_id], references: [id])
+  budget   budget?  @relation(fields: [budget_id], references: [id])
+
+  @@map("transaction")
 }
