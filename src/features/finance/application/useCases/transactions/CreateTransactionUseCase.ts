@@ -1,4 +1,4 @@
-import { CreateTransactionDTO } from "../../../domain/DTO/createTransactionDTO";
+import { CreateTransactionDTO } from "../../../domain/DTO/CreateTransactionDTO";
 import { FinanceRepository } from "../../../infrastructure/repository/FinanceRepository";
 
 export class CreateTransactionUseCase {

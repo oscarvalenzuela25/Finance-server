@@ -1,14 +1,3 @@
-export type CreateOverview = {
-  user_id: string;
-  current_balance: number;
-  income_balance: number;
-  expenses_balance: number;
-};
-
-export type GetPotsQueryParams = {
-  limit?: number;
-};
-
 // Transactions
 export type GetTransactionsQueryParams = {
   page?: number;
@@ -25,12 +14,31 @@ export type GetTransactionsQueryParams = {
 export type Transaction = {
   id: string;
   user_id: string;
+  category_id: string;
+  budget_id?: string;
   name: string;
   amount: number;
   transaction_date: Date;
-  category_id: string;
 };
 
 export type TransactionToCreate = Omit<Transaction, "id">;
 
 export type TransactionToUpdate = Partial<TransactionToCreate>;
+
+// Pots
+export type GetPotsQueryParams = {
+  limit?: number;
+};
+
+export type Pot = {
+  id: string;
+  user_id: string;
+  name: string;
+  target_value: string;
+  current_value: string;
+  theme: string;
+};
+
+export type PotToCreate = Omit<Pot, "id">;
+
+export type PotToUpdate = Partial<PotToCreate>;

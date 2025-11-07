@@ -4,8 +4,12 @@ const prisma = new PrismaClient();
 const main = async () => {
   await prisma.user.createMany({
     data: [
-      { name: "Oscar", email: "oscar@example.com", password: "123456" },
-      { name: "Lucía", email: "lucia@example.com", password: "123456" },
+      {
+        name: "Oscar",
+        email: "test@gmail.com",
+        password:
+          "$2b$10$wVV8LBhVYqpG3CzogIRRdeeV2Iif.E/hOUbAQtwtdYzqXLo4YIMmK",
+      },
     ],
   });
   await prisma.category.createMany({

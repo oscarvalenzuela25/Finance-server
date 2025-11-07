@@ -8,9 +8,9 @@ export class OverviewController {
     try {
       const userId = (req as any).user?.id;
       const overview = await this.getOverviewUseCase.execute(userId);
-      reply.send(overview);
+      return reply.status(200).send(overview);
     } catch (error) {
-      reply.status(500).send({ error: "Internal Server Error" });
+      return reply.status(500).send({ error: "Internal Server Error" });
     }
   }
 }

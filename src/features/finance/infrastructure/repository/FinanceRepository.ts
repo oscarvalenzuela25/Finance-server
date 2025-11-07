@@ -2,29 +2,13 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "../../../../lib/prisma";
 import {
   GetTransactionsQueryParams,
+  PotToCreate,
+  PotToUpdate,
   TransactionToCreate,
   TransactionToUpdate,
 } from "../../domain/types";
 
 export class FinanceRepository {
-  async getOverviewByUserId(userId: string) {
-    return prisma.overview.findFirst({
-      where: { user_id: userId },
-    });
-  }
-
-  async createOverview(payload: Prisma.overviewCreateInput) {
-    return prisma.overview.create({
-      data: payload,
-    });
-  }
-
-  async getPotsByUserId(userId: string) {
-    return prisma.pot.findMany({
-      where: { user_id: userId },
-    });
-  }
-
   async getBudgetsByUserId(userId: string) {
     return prisma.budget.findMany({
       where: { user_id: userId },
@@ -40,12 +24,12 @@ export class FinanceRepository {
 
   async getTransactionsByUserId({
     userId,
-    includes,
-    queryParams,
+    includes = {},
+    queryParams = {},
   }: {
     userId: string;
-    includes: { category?: boolean };
-    queryParams: GetTransactionsQueryParams;
+    includes?: { category?: boolean };
+    queryParams?: GetTransactionsQueryParams;
   }) {
     const {
       page,
@@ -133,6 +117,31 @@ export class FinanceRepository {
   async deleteTransaction(transactionId: string) {
     return prisma.transaction.delete({
       where: { id: transactionId },
+    });
+  }
+
+  async getPotsByUserId(userId: string) {
+    return prisma.pot.findMany({
+      where: { user_id: userId },
+    });
+  }
+
+  async createPot(payload: PotToCreate) {
+    return prisma.pot.create({
+      data: payload,
+    });
+  }
+
+  async updatePot(potId: string, payload: PotToUpdate) {
+    return prisma.pot.update({
+      where: { id: potId },
+      data: payload,
+    });
+  }
+
+  async deletePot(potId: string) {
+    return prisma.pot.delete({
+      where: { id: potId },
     });
   }
 }
