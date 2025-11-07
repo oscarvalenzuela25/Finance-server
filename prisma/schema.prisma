@@ -75,7 +75,7 @@ model transaction {
   // relaciones
   user     user     @relation(fields: [user_id], references: [id])
   category category @relation(fields: [category_id], references: [id])
-  budget   budget?  @relation(fields: [budget_id], references: [id])
+  budget   budget?  @relation(fields: [budget_id], references: [id], onDelete: SetNull)
 
   @@map("transaction")
 }
