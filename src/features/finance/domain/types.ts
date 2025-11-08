@@ -42,3 +42,16 @@ export type Pot = {
 export type PotToCreate = Omit<Pot, "id">;
 
 export type PotToUpdate = Partial<PotToCreate>;
+
+// Budgets
+export type Budget = {
+  id: string;
+  user_id: string;
+  category_id: string;
+  maximum: number;
+  theme: string;
+};
+
+export type BudgetToCreate = Omit<Budget, "id">;
+
+export type BudgetToUpdate = Partial<BudgetToCreate>;

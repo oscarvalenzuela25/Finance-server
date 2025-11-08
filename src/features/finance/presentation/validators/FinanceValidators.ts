@@ -62,3 +62,23 @@ export const updatePot = z.object({
 export const deletePotRouteParams = z.object({
   potId: z.string(),
 });
+
+export const createBudget = z.object({
+  category_id: z.string(),
+  maximum: z.number(),
+  theme: z.string(),
+});
+
+export const updateBudgetRouteParams = z.object({
+  budgetId: z.string(),
+});
+
+export const updateBudget = z.object({
+  category_id: z.string().optional(),
+  maximum: z.number().optional(),
+  theme: z.string().optional(),
+});
+
+export const deleteBudgetRouteParams = z.object({
+  budgetId: z.string(),
+});

@@ -1,6 +1,8 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../../../../lib/prisma";
 import {
+  BudgetToCreate,
+  BudgetToUpdate,
   GetTransactionsQueryParams,
   PotToCreate,
   PotToUpdate,
@@ -9,17 +11,8 @@ import {
 } from "../../domain/types";
 
 export class FinanceRepository {
-  async getBudgetsByUserId(userId: string) {
-    return prisma.budget.findMany({
-      where: { user_id: userId },
-      include: {
-        category: {
-          include: {
-            transactions: true,
-          },
-        },
-      },
-    });
+  async getCategories() {
+    return prisma.category.findMany();
   }
 
   async getTransactionsByUserId({
@@ -101,6 +94,12 @@ export class FinanceRepository {
     });
   }
 
+  async getTransactionsByWhere(where: Prisma.transactionWhereInput) {
+    return prisma.transaction.findMany({
+      where,
+    });
+  }
+
   async createTransaction(payload: TransactionToCreate) {
     return prisma.transaction.create({
       data: payload,
@@ -142,6 +141,34 @@ export class FinanceRepository {
   async deletePot(potId: string) {
     return prisma.pot.delete({
       where: { id: potId },
+    });
+  }
+
+  async getBudgetsByUserId(userId: string) {
+    return prisma.budget.findMany({
+      where: { user_id: userId },
+      include: {
+        category: true,
+      },
+    });
+  }
+
+  async createBudget(payload: BudgetToCreate) {
+    return prisma.budget.create({
+      data: payload,
+    });
+  }
+
+  async updateBudget(budgetId: string, payload: BudgetToUpdate) {
+    return prisma.budget.update({
+      where: { id: budgetId },
+      data: payload,
+    });
+  }
+
+  async deleteBudget(budgetId: string) {
+    return prisma.budget.delete({
+      where: { id: budgetId },
     });
   }
 }
