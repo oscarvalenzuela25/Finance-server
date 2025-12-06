@@ -6,12 +6,22 @@ import { getTransactionsQueryParams } from "../../../presentation/validators/Fin
 export class GetTransactionsByUserId {
   constructor(private financeRepository: FinanceRepository) {}
 
-  async execute(userId: string, queryParams: GetTransactionsQueryParams = {}) {
-    validate(getTransactionsQueryParams, queryParams);
+  async execute(
+    userId: string,
+    { page, limit, ...queryParams }: GetTransactionsQueryParams = {}
+  ) {
+    const newQueryParams: GetTransactionsQueryParams = {
+      page: page ? +page : undefined,
+      limit: limit ? +limit : undefined,
+      q: {
+        ...queryParams.q,
+      },
+    };
+    validate(getTransactionsQueryParams, newQueryParams);
     const transactions = await this.financeRepository.getTransactionsByUserId({
       userId,
       includes: { category: true },
-      queryParams,
+      queryParams: newQueryParams,
     });
     return transactions;
   }
